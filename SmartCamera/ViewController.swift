@@ -47,9 +47,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         let request = VNCoreMLRequest(model: model){
             (finshedReq, err) in
-            
             guard let results = finshedReq.results as? [VNRecognizedObjectObservation] else { return }
-            guard let firstObservation = results.first else {
+            guard let objectObservation = results.first?.labels.first else {
                 DispatchQueue.main.async {
                     self.identifier.text = "인식된 물체 없음"
                     self.confidence.text = "0"
@@ -57,8 +56,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 return
             }
             DispatchQueue.main.async {
-                self.identifier.text = firstObservation.labels.first?.identifier
-                self.confidence.text = String(firstObservation.labels.first!.confidence)
+                self.identifier.text = objectObservation.identifier
+                self.confidence.text = String(objectObservation.confidence)
             }
         }
         
